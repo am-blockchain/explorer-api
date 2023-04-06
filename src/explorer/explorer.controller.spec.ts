@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExplorerController } from './explorer.controller';
 import { ExplorerService } from './explorer.service';
 import { AvalancheRpcGateway } from '../gateway/web3/rpc-gateway';
+import { CoinGeckoAxiosGateway } from '../gateway/coin-gecko/axios-gateway';
 
 describe('ExplorerController', () => {
   let controller: ExplorerController;
@@ -9,7 +10,7 @@ describe('ExplorerController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ExplorerController],
-      providers: [ExplorerService, AvalancheRpcGateway],
+      providers: [ExplorerService, AvalancheRpcGateway, CoinGeckoAxiosGateway],
     }).compile();
 
     controller = module.get<ExplorerController>(ExplorerController);
@@ -20,6 +21,7 @@ describe('ExplorerController', () => {
   });
 
   it('should get txn details by hash', async () => {
+    // https://snowtrace.io/tx/0x1a706c98dc20588d7d9565ba9f2d577889cd1c1cb1fd9600e206bc4883676a07
     const txn = await controller.get(
       '0x1a706c98dc20588d7d9565ba9f2d577889cd1c1cb1fd9600e206bc4883676a07',
     );

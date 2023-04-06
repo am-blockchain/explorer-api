@@ -14,12 +14,17 @@ export class CoinGeckoAxiosGateway {
       const resp = await axios.get(url);
       if (resp && resp.status === 200 && resp.data) {
         const key = contractAddress.toLowerCase();
-        const value = resp.data[key][this.vsCurrency];
-        return value;
+        const value = resp.data[key];
+
+        if (value && value[this.vsCurrency]) {
+          const usdValue = value[this.vsCurrency];
+          return usdValue;
+        }
       }
     } catch (e) {
-      console.log(e);
-      return undefined;
+      console.log(e.message);
+      throw new Error(e.message);
     }
+    return undefined;
   }
 }

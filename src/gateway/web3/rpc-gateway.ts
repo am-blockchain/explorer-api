@@ -23,8 +23,8 @@ export class AvalancheRpcGateway {
       const txnDetails = await this.getTransactionDetails(txn);
       return txnDetails;
     } catch (e) {
-      console.log(e);
-      throw new Error(e);
+      console.log(e.message);
+      throw new Error(e.message);
     }
   }
 

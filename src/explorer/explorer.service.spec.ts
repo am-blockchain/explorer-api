@@ -1,13 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExplorerService } from './explorer.service';
 import { AvalancheRpcGateway } from '../gateway/web3/rpc-gateway';
+import { CoinGeckoAxiosGateway } from '../gateway/coin-gecko/axios-gateway';
 
 describe('ExplorerService', () => {
   let service: ExplorerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ExplorerService, AvalancheRpcGateway],
+      providers: [ExplorerService, AvalancheRpcGateway, CoinGeckoAxiosGateway],
     }).compile();
 
     service = module.get<ExplorerService>(ExplorerService);
