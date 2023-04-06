@@ -17,9 +17,8 @@ describe('CoinGeckoAxiosGateway', () => {
   });
 
   it('should get current price for token', async () => {
-    const price = await gateway.getPrice(
-      '0x8a0cAc13c7da965a312f08ea4229c37869e85cB9',
-    );
+    const contractAddresss = '0x8a0cAc13c7da965a312f08ea4229c37869e85cB9'; // GRT.e token
+    const price = await gateway.getPrice(contractAddresss);
 
     expect(price).toBeDefined();
   });
