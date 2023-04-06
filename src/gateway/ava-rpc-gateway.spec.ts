@@ -17,15 +17,17 @@ describe('ExplorerService', () => {
   });
 
   it('should get txn details by hash', async () => {
-    const result = await gateway.getTransaction(
+    const txn = await gateway.getTransaction(
       '0x0459a3eacf4c0dad19e02316e5e80287a77096ac71dc7f6a9f6a6668ecdda7d2',
     );
 
-    console.log({ result });
+    const { transfers } = txn;
 
-    // expect(result.length).toBeGreaterThan(0);
-    // expect(result[0]).toHaveProperty('value');
-    // expect(result[0].from).toBe('0x187b2d576ba7ec2141c180A96eDd0f202492f36B');
-    // expect(result[0].to).toBe('0x057538553Aab34f162b1beDD89914aA540a26073');
+    expect(transfers.length).toBeGreaterThan(0);
+    expect(transfers[0]).toHaveProperty('value');
+    expect(transfers[0].from).toBe(
+      '0x187b2d576ba7ec2141c180A96eDd0f202492f36B',
+    );
+    expect(transfers[0].to).toBe('0x057538553Aab34f162b1beDD89914aA540a26073');
   });
 });
