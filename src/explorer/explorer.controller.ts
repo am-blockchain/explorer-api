@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ExplorerService } from './explorer.service';
-import { AvalancheTransaction } from 'src/gateway/types/transaction';
+import { AvalancheTransaction } from '../gateway/web3/types/transaction';
 
 @Controller('explorer')
 export class ExplorerController {

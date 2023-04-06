@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { RpcGateway } from '../gateway/ava-rpc-gateway';
-import { AvalancheTransaction } from '../gateway/types/transaction';
+import { AvalancheRpcGateway } from '../gateway/web3/rpc-gateway';
+import { AvalancheTransaction } from '../gateway/web3/types/transaction';
 
 @Injectable()
 export class ExplorerService {
-  constructor(private readonly explorerGateway: RpcGateway) {}
+  constructor(private readonly explorerGateway: AvalancheRpcGateway) {}
 
   async get(txnHash: string): Promise<AvalancheTransaction> {
     return this.explorerGateway.getTransaction(txnHash);

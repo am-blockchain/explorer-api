@@ -7,10 +7,11 @@ import {
   ERC20TokenTransfer,
   TxnStatus,
 } from './types/transaction';
+import { CoinGeckoAxiosGateway } from '../coin-gecko/axios-gateway';
 
 @Injectable()
-export class RpcGateway {
-  constructor() {
+export class AvalancheRpcGateway {
+  constructor(private readonly coinGeckoGateway: CoinGeckoAxiosGateway) {
     this.web3 = new Web3('https://api.avax.network/ext/bc/C/rpc');
   }
 
@@ -50,8 +51,6 @@ export class RpcGateway {
     for (const log of logs) {
       const { address, data, topics } = log;
 
-      // https://web3js.readthedocs.io/en/v1.7.5/web3-eth-abi.html#decodelog
-      // https://ethereum.stackexchange.com/questions/79788/what-is-input-in-web3-eth-abi-decodeloginputs-hexstring-topics
       if (
         topics.length === 3 &&
         topics[0] ===
@@ -65,11 +64,14 @@ export class RpcGateway {
         const from = this.hexToCleanAddress(topics[1]);
         const to = this.hexToCleanAddress(topics[2]);
 
+        const currentUsdPrice = await this.coinGeckoGateway.getPrice(address);
+
         const tokenTransfer: ERC20TokenTransfer = {
           value,
           from,
           to,
           address: address.toLowerCase(),
+          currentUsdPrice,
         };
 
         tokenTransfers.push(tokenTransfer);

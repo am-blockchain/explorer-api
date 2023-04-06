@@ -5,6 +5,7 @@ export interface ERC20TokenTransfer {
   from: string;
   to: string;
   address: string;
+  currentUsdPrice?: number;
 }
 
 export interface AvalancheTransaction {

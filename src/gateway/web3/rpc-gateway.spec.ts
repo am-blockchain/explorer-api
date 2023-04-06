@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RpcGateway } from './ava-rpc-gateway';
+import { AvalancheRpcGateway } from './rpc-gateway';
+import { CoinGeckoAxiosGateway } from '../coin-gecko/axios-gateway';
 
-describe('ExplorerService', () => {
-  let gateway: RpcGateway;
+describe('AvalancheRpcGateway', () => {
+  let gateway: AvalancheRpcGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RpcGateway],
+      providers: [AvalancheRpcGateway, CoinGeckoAxiosGateway],
     }).compile();
 
-    gateway = module.get<RpcGateway>(RpcGateway);
+    gateway = module.get<AvalancheRpcGateway>(AvalancheRpcGateway);
   });
 
   it('should be defined', () => {
@@ -29,5 +30,6 @@ describe('ExplorerService', () => {
       '0x187b2d576ba7ec2141c180a96edd0f202492f36b',
     );
     expect(transfers[0].to).toBe('0x057538553aab34f162b1bedd89914aa540a26073');
+    expect(transfers[0].currentUsdPrice).toBeDefined();
   });
 });

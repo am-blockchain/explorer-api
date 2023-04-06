@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExplorerController } from './explorer.controller';
 import { ExplorerService } from './explorer.service';
-import { RpcGateway } from '../gateway/ava-rpc-gateway';
+import { AvalancheRpcGateway } from '../gateway/web3/rpc-gateway';
 
 describe('ExplorerController', () => {
   let controller: ExplorerController;
@@ -9,7 +9,7 @@ describe('ExplorerController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ExplorerController],
-      providers: [ExplorerService, RpcGateway],
+      providers: [ExplorerService, AvalancheRpcGateway],
     }).compile();
 
     controller = module.get<ExplorerController>(ExplorerController);

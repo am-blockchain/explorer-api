@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExplorerService } from './explorer.service';
-import { RpcGateway } from '../gateway/ava-rpc-gateway';
+import { AvalancheRpcGateway } from '../gateway/web3/rpc-gateway';
 
 describe('ExplorerService', () => {
   let service: ExplorerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ExplorerService, RpcGateway],
+      providers: [ExplorerService, AvalancheRpcGateway],
     }).compile();
 
     service = module.get<ExplorerService>(ExplorerService);
