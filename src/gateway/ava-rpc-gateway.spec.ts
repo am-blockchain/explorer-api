@@ -26,8 +26,8 @@ describe('ExplorerService', () => {
     expect(transfers.length).toBeGreaterThan(0);
     expect(transfers[0]).toHaveProperty('value');
     expect(transfers[0].from).toBe(
-      '0x187b2d576ba7ec2141c180A96eDd0f202492f36B',
+      '0x187b2d576ba7ec2141c180a96edd0f202492f36b',
     );
-    expect(transfers[0].to).toBe('0x057538553Aab34f162b1beDD89914aA540a26073');
+    expect(transfers[0].to).toBe('0x057538553aab34f162b1bedd89914aa540a26073');
   });
 });

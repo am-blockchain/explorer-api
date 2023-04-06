@@ -23,6 +23,7 @@ export class RpcGateway {
       return txnDetails;
     } catch (e) {
       console.log(e);
+      throw new Error(e);
     }
   }
 
@@ -51,48 +52,28 @@ export class RpcGateway {
 
       // https://web3js.readthedocs.io/en/v1.7.5/web3-eth-abi.html#decodelog
       // https://ethereum.stackexchange.com/questions/79788/what-is-input-in-web3-eth-abi-decodeloginputs-hexstring-topics
-      const decodedLog = this.web3.eth.abi.decodeLog(
-        [
-          {
-            type: 'string',
-            name: 'tokenTicker',
-            indexed: true,
-          },
-          {
-            type: 'address',
-            name: 'from',
-            indexed: true,
-          },
-          {
-            type: 'address',
-            name: 'to',
-            indexed: true,
-          },
-          {
-            type: 'uint256',
-            name: 'value',
-          },
-        ],
-        data,
-        topics,
-      );
-      // address: smart contract address of the erc20 token being transferred
-      // data: value (ie Amount) of the token being transferred
-      // from: address initiating the token transfer
-      // to: address receiving the token transfer
+      if (
+        topics.length === 3 &&
+        topics[0] ===
+          '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+      ) {
+        // address: smart contract address of the erc20 token being transferred
+        // value: amount of the token being transferred
+        // from: address initiating the token transfer
+        // to: address receiving the token transfer
+        const value = this.web3.utils.toBN(data).toString();
+        const from = this.hexToCleanAddress(topics[1]);
+        const to = this.hexToCleanAddress(topics[2]);
 
-      const { from, to, value } = decodedLog;
+        const tokenTransfer: ERC20TokenTransfer = {
+          value,
+          from,
+          to,
+          address: address.toLowerCase(),
+        };
 
-      // console.log({ logs, topics, from, to, value });
-
-      const tokenTransfer: ERC20TokenTransfer = {
-        value,
-        from,
-        to,
-        address,
-      };
-
-      tokenTransfers.push(tokenTransfer);
+        tokenTransfers.push(tokenTransfer);
+      }
     }
 
     const txnDetails: AvalancheTransaction = {
@@ -110,5 +91,10 @@ export class RpcGateway {
       transactionIndex,
     };
     return txnDetails;
+  }
+
+  private hexToCleanAddress(hex: string) {
+    const address = this.web3.eth.abi.decodeParameter('address', hex);
+    return address.toLowerCase();
   }
 }
