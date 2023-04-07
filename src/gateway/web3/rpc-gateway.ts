@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import NodeCache from 'node-cache';
 import * as math from 'mathjs';
 import { Injectable } from '@nestjs/common';
 import { Transaction, TransactionReceipt } from 'web3-core';
@@ -16,14 +17,14 @@ export class AvalancheRpcGateway {
   }
 
   private readonly web3: Web3;
-  private txnMap = new Map<string, Transaction>();
-  private receiptMap = new Map<string, TransactionReceipt>();
+  private txnMap = new NodeCache({ stdTTL: 1000, checkperiod: 200 });
+  private receiptMap = new NodeCache({ stdTTL: 1000, checkperiod: 200 });
   // blockchain txns are immutable, so we dont need to make the call to the RPC node every time
   // we can just cache the results
-  // this also makes our endpoint result results very fast
+  // this also makes our endpoint return results very fast
   // however, in-memory caching should be used for limited amount of data
   // the data can also be lost very easily if the server crashes or restarts
-  // we should be using a remote cache such as Redis
+  // we should be using a remote cache server such as Redis
 
   async getTransaction(txnHash: string): Promise<AvalancheTransaction> {
     try {
