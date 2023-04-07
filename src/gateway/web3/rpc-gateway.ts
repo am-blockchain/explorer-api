@@ -16,10 +16,29 @@ export class AvalancheRpcGateway {
   }
 
   private readonly web3: Web3;
+  private txnMap = new Map<string, Transaction>();
+  private receiptMap = new Map<string, TransactionReceipt>();
+  // blockchain txns are immutable, so we dont need to make the call to the RPC node every time
+  // we can just cache the results
+  // this also makes our endpoint result results very fast
+  // however, in-memory caching should be used for limited amount of data
+  // the data can also be lost very easily if the server crashes or restarts
+  // we should be using a remote cache such as Redis
 
   async getTransaction(txnHash: string): Promise<AvalancheTransaction> {
     try {
-      const txn: Transaction = await this.web3.eth.getTransaction(txnHash);
+      let txn: Transaction;
+
+      // we are using `cache aside pattern`
+      if (this.txnMap.get(txnHash)) {
+        console.log(`Transaction ${txnHash} found in the local cache`);
+        txn = this.txnMap.get(txnHash);
+      } else {
+        console.log(`Requesting Transaction ${txnHash} from the remote node`);
+        txn = await this.web3.eth.getTransaction(txnHash);
+        this.txnMap.set(txnHash, txn);
+      }
+
       const txnDetails = await this.getTransactionDetails(txn);
       return txnDetails;
     } catch (e) {
@@ -31,8 +50,20 @@ export class AvalancheRpcGateway {
   private async getTransactionDetails(
     txn: Transaction,
   ): Promise<AvalancheTransaction> {
-    const txnReceipt: TransactionReceipt =
-      await this.web3.eth.getTransactionReceipt(txn.hash);
+    let txnReceipt: TransactionReceipt;
+
+    if (this.receiptMap.get(txn.hash)) {
+      console.log(
+        `Transaction Receipt for ${txn.hash} found in the local cache`,
+      );
+      txnReceipt = this.receiptMap.get(txn.hash);
+    } else {
+      console.log(
+        `Requesting Transaction Receipt for ${txn.hash} from the remote node`,
+      );
+      txnReceipt = await this.web3.eth.getTransactionReceipt(txn.hash);
+      this.receiptMap.set(txn.hash, txnReceipt);
+    }
 
     const {
       blockHash,
