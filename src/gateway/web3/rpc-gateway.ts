@@ -19,8 +19,8 @@ export class AvalancheRpcGateway {
   private readonly web3: Web3;
   private txnMap = new NodeCache({ stdTTL: 1000, checkperiod: 200 });
   private receiptMap = new NodeCache({ stdTTL: 1000, checkperiod: 200 });
+  // Caching the txns and receipts
   // blockchain txns are immutable, so we dont need to make the call to the RPC node every time
-  // we can just cache the results
   // this also makes our endpoint return results very fast
   // however, in-memory caching should be used for limited amount of data
   // the data can also be lost very easily if the server crashes or restarts
