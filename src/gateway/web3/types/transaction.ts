@@ -12,7 +12,6 @@ export interface AvalancheTransaction {
   blockHash: string;
   blockNumber: number;
   // timestampSEC: number;
-  // logs: OptimismLog[];
   hash: string;
   status: TxnStatus;
   transfers: ERC20TokenTransfer[];

@@ -7,7 +7,7 @@ export class CoinGeckoAxiosGateway {
   private readonly platformId = 'avalanche';
   private readonly vsCurrency = 'usd';
 
-  async getPrice(contractAddress: string): Promise<any> {
+  async getPrice(contractAddress: string): Promise<number> {
     const url = `${this.baseUrl}/simple/token_price/${this.platformId}?vs_currencies=${this.vsCurrency}&contract_addresses=${contractAddress}`;
 
     try {
